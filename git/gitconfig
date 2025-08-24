@@ -1,0 +1,19 @@
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	lg = log --oneline
+
+[user]
+	email = anders.hu@agoda.com
+	name = Anders
+
+[url "git@gitlab.agodadev.io:"]
+	insteadOf = https://gitlab.agodadev.io
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
