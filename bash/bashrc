@@ -1,4 +1,4 @@
-export EDITOR="emacsclient --alternate-editor=emacs --socket-name /tmp/emacs/anrs/server"
+export EDITOR="emacsclient --alternate-editor=emacs --socket-name /tmp/emacs/$(id -u)/server"
 export CLICOLOR=1
 export LSCOLORS=Fxbxaxdxcxegedabagacad
 export PS1="\[\e[1;31m\]\u@\h\[\e[m\] \[\e[1;36m\]\t \[\e[1;32m\]\`pwd\`\n\[\e[1;33m\]\$(show-git-branch)\[\e[1;35m\]$ \[\e[m\]"
