@@ -7,6 +7,7 @@ This document outlines the Go code style preferences and conventions adopted for
 *   **Clarity and Readability:** Code must be easily understandable and maintainable.
 *   **Idiomatic Go:** Follow established Go patterns and best practices.
 *   **Descriptive Naming:** Employ clear, concise, and descriptive names for packages, types, functions, and variables.
+*   **English Comments:** All comments in the code must be expressed in English.
 
 ## Specific Conventions
 
