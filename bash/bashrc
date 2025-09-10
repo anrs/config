@@ -4,9 +4,9 @@ export LSCOLORS=Fxbxaxdxcxegedabagacad
 export PS1="\[\e[1;31m\]\u@\h\[\e[m\] \[\e[1;36m\]\t \[\e[1;32m\]\`pwd\`\n\[\e[1;33m\]\$(show-git-branch)\[\e[1;35m\]$ \[\e[m\]"
 export PATH="$HOME/.krew/bin:$HOME/.local/bin:$HOME/go/bin:$PATH"
 export TERM=xterm-256color
-export GOPRIVATE="gitlab.agodadev.io/*"
-export GONOPROXY="gitlab.agodadev.io/*"
-export GONOSUMDB="gitlab.agodadev.io/*"
+export GOPRIVATE="gitlab.agodadev.io/*,github.com/*"
+export GONOPROXY="gitlab.agodadev.io/*,github.com/*"
+export GONOSUMDB="gitlab.agodadev.io/*,github.com/*"
 
 alias gp="git push"
 alias gpo="gp origin"

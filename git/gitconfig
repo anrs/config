@@ -6,11 +6,14 @@
 	lg = log --oneline
 
 [user]
-	email = anders.hu@agoda.com
-	name = Anders
+	email = aurid@aurid.io
+	name = aurid
 
 [url "git@gitlab.agodadev.io:"]
 	insteadOf = https://gitlab.agodadev.io
+
+[url "git@github.com:"]
+	insteadOf = https://github.com
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
