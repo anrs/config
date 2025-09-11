@@ -125,6 +125,10 @@
   :config
   (setq rust-format-on-save t))
 
+(add-hook 'makefile-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode t)))
+
 (use-package vterm
   :ensure t
   :bind ("M-e" . vterm)
