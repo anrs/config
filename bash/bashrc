@@ -31,6 +31,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
     export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 
     # The ggrep is compatible to the Linux grep. 
+    # To install ggrep, run: brew install grep
     alias grep=ggrep
 
     brew_etc="$(brew --prefix)/etc" && [[ -r "${brew_etc}/profile.d/bash_completion.sh" ]] && . "${brew_etc}/profile.d/bash_completion.sh"
@@ -97,14 +98,62 @@ git-branch() {
 }
 
 startvm() {
-  local vmdir="${HOME}/Virtual Machines.localized/Ubuntu 64-bit Arm Server 24.04.1.vmwarevm"
-  local vmx_path="${vmdir}/Ubuntu 64-bit Arm Server 24.04.1.vmx"
-
   # Check if the 'vmrun' command exists.
   if ! command -v vmrun &> /dev/null; then
     echo "Error: 'vmrun' command not found. Please ensure VMware Fusion is installed and in the PATH." >&2
     return 1
   fi
+
+  local vm_dir_base="${HOME}/Virtual Machines.localized"
+  
+  # shopt -s nullglob makes glob patterns expand to nothing if no matches are found.
+  shopt -s nullglob
+  local vm_paths=("${vm_dir_base}"/*.vmwarevm)
+  shopt -u nullglob # Turn it off again to not affect the rest of the shell
+
+  local vm_count=${#vm_paths[@]}
+  local vmdir
+
+  if [ $vm_count -eq 0 ]; then
+    echo "No VMs found in ${vm_dir_base}" >&2
+    return 1
+  elif [ $vm_count -eq 1 ]; then
+    vmdir="${vm_paths[0]}"
+    echo "Found one VM, proceeding with: $(basename "${vmdir}")"
+  else
+    echo "Please select a VM to start:"
+    local vm_names=()
+    for vm_path in "${vm_paths[@]}"; do
+      vm_names+=("$(basename "${vm_path}")")
+    done
+
+    # PS3 is the prompt for the select command
+    PS3="Enter number: "
+    select vm_name in "${vm_names[@]}"; do
+      if [ -n "$vm_name" ]; then
+        vmdir="${vm_dir_base}/${vm_name}"
+        break
+      else
+        echo "Invalid selection. Please try again."
+      fi
+    done
+  fi
+
+  if [ -z "$vmdir" ]; then
+    echo "No VM selected. Aborting." >&2
+    return 1
+  fi
+
+  # Find the .vmx file within the selected directory. Should only be one.
+  shopt -s nullglob
+  local vmx_files=("${vmdir}"/*.vmx)
+  shopt -u nullglob
+  if [ ${#vmx_files[@]} -eq 0 ]; then
+      echo "Error: No .vmx file found in '${vmdir}'" >&2
+      return 1
+  fi
+  # In case there are multiple, just take the first one.
+  local vmx_path="${vmx_files[0]}"
 
   # Check if the VMX file itself exists to prevent path errors.
   if [ ! -f "${vmx_path}" ]; then
@@ -112,13 +161,8 @@ startvm() {
     return 1
   fi
 
-  echo "Checking status of VM: ${vmx_path}"
+  echo "Checking status of VM: $(basename "${vmdir}")"
 
-  # Correctly check if the VM is running.
-  # The 'if' statement evaluates the exit code of the last command in the pipeline (grep).
-  # -q: quiet mode, suppresses stdout and returns an exit code immediately on first match.
-  # -F: treat pattern as a fixed string, not a regular expression.
-  # -x: match the entire line.
   if vmrun list | grep -qFx "${vmx_path}"; then
     echo "VM is already running. Nothing to do."
     return 0
